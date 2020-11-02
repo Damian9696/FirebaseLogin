@@ -66,6 +66,12 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         navController = findNavController()
+
+        activity?.let { notNullActivity ->
+            notNullActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+                navController.popBackStack(R.id.mainFragment, false)
+            }
+        }
     }
 
     private fun launchSignInFlow() {

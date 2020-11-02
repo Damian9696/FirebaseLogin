@@ -21,6 +21,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceFragmentCompat
 
@@ -39,5 +40,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
+            when (authenticationState) {
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> Log.i(TAG, "Authenticated")
+                LoginViewModel.AuthenticationState.UNAUTHENTICATED -> {
+                    findNavController().navigate(R.id.loginFragment)
+                }
+                else -> Log.e(
+                    TAG,
+                    "New $authenticationState state that doesn't require anu UI change"
+                )
+            }
+        }
     }
 }
