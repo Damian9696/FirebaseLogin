@@ -29,6 +29,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import com.example.android.firebaseui_login_sample.databinding.*
 import com.firebase.ui.auth.AuthUI
@@ -70,6 +71,16 @@ class LoginFragment : Fragment() {
         activity?.let { notNullActivity ->
             notNullActivity.onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
                 navController.popBackStack(R.id.mainFragment, false)
+            }
+        }
+
+        viewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
+            when (authenticationState) {
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> navController.popBackStack()
+                else -> Log.e(
+                    TAG,
+                    "Authentication state doesn't require any UI change $authenticationState"
+                )
             }
         }
     }
